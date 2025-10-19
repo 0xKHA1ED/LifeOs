@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        #form-container, #main-content {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto max-w-2xl px-4 py-8 md:py-12">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Subscription Tracker</h1>
+            <p class="text-gray-600 mt-2">Manage your monthly and yearly subscriptions with ease.</p>
+        </header>
+
+        <!-- Authentication Section -->
+        <div id="auth-container" class="text-center mb-6 p-4 bg-white rounded-lg shadow-md flex flex-col sm:flex-row justify-center items-center gap-4">
+            <!-- This button is shown when the user is logged out -->
+            <button id="google-login-btn" class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out hidden">
+                <svg class="inline-block w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C42.012,35.836,44,30.138,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                Sign in with Google
+            </button>
+             <!-- This container shows user info when logged in -->
+            <div id="user-info" class="hidden items-center gap-4">
+                 <p id="auth-status" class="text-sm text-gray-600">Connecting...</p>
+                 <button id="sign-out-btn" class="text-sm text-indigo-600 hover:text-indigo-800 font-semibold">Sign Out</button>
+            </div>
+        </div>
+
+        <main id="main-content" class="opacity-0">
+            <!-- Add Subscription Form -->
+            <div class="bg-white rounded-lg shadow-md mb-8 overflow-hidden">
+                <div id="add-subscription-toggle" class="p-6 cursor-pointer flex justify-between items-center">
+                    <h2 class="text-xl font-semibold">Add New Subscription</h2>
+                    <svg id="toggle-icon" class="w-6 h-6 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+                <div id="form-container" class="px-6 pb-6 hidden">
+                    <form id="subscription-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2">
+                            <label for="name" class="block text-sm font-medium text-gray-700">Service Name</label>
+                            <input type="text" id="name" name="name" required placeholder="e.g., Netflix, Spotify" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+                            <input type="number" id="price" name="price" required min="0" step="0.01" placeholder="e.g., 9.99" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="currency" class="block text-sm font-medium text-gray-700">Currency</label>
+                            <select id="currency" name="currency" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option>USD</option>
+                                <option>EUR</option>
+                                <option>GBP</option>
+                                <option selected>EGP</option>
+                                <option>JPY</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="billing-cycle" class="block text-sm font-medium text-gray-700">Billing Cycle</label>
+                            <select id="billing-cycle" name="billing-cycle" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="next-billing-date" class="block text-sm font-medium text-gray-700">Next Billing Date</label>
+                            <input type="date" id="next-billing-date" name="next-billing-date" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                             <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                                Add Subscription
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Totals Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h2 class="text-xl font-semibold mb-4">Your Spending Summary</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+                    <div>
+                        <p class="text-sm text-gray-500">Monthly Total</p>
+                        <p id="monthly-total" class="text-2xl font-bold text-indigo-600">$0.00</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Yearly Total</p>
+                        <p id="yearly-total" class="text-2xl font-bold text-indigo-600">$0.00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscription List -->
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Your Subscriptions</h2>
+                <div id="subscription-list" class="space-y-4">
+                    <!-- JS will populate this -->
+                    <p id="no-subscriptions" class="text-center text-gray-500 py-4">Sign in to view your subscriptions.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase -->
+    <script type="module">
+        // --- Firebase SDK Imports ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, collection, addDoc, deleteDoc, setLogLevel } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+        // --- Firebase Configuration ---
+        const firebaseConfig = {
+                apiKey: "__FIREBASE_API_KEY__",
+                authDomain: "__FIREBASE_AUTH_DOMAIN__",
+                projectId: "__FIREBASE_PROJECT_ID__",
+                storageBucket: "__FIREBASE_STORAGE_BUCKET__",
+                messagingSenderId: "__FIREBASE_MESSAGING_SENDER_ID__",
+                appId: "__FIREBASE_APP_ID__"
+            };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-subscription-tracker';
+        
+        // --- App Initialization ---
+        let app, auth, db, userId;
+        let subscriptions = [];
+        let unsubscribe; // To store the onSnapshot listener
+
+        // --- DOM Elements ---
+        const subscriptionForm = document.getElementById('subscription-form');
+        const subscriptionList = document.getElementById('subscription-list');
+        const noSubscriptionsMessage = document.getElementById('no-subscriptions');
+        const monthlyTotalEl = document.getElementById('monthly-total');
+        const yearlyTotalEl = document.getElementById('yearly-total');
+        const authStatusEl = document.getElementById('auth-status');
+        const addSubscriptionToggle = document.getElementById('add-subscription-toggle');
+        const formContainer = document.getElementById('form-container');
+        const toggleIcon = document.getElementById('toggle-icon');
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        const signOutBtn = document.getElementById('sign-out-btn');
+        const userInfoContainer = document.getElementById('user-info');
+        const mainContent = document.getElementById('main-content');
+
+
+        // --- Main App Logic ---
+        async function initialize() {
+            setLogLevel('debug');
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    // User is signed in
+                    userId = user.uid;
+                    authStatusEl.textContent = `Signed in as: ${user.email}`;
+                    
+                    googleLoginBtn.classList.add('hidden');
+                    userInfoContainer.classList.remove('hidden');
+                    userInfoContainer.classList.add('flex');
+                    mainContent.classList.remove('opacity-0');
+
+                    await attachFirestoreListener();
+                } else {
+                    // No user is signed in
+                    userId = null;
+                    
+                    googleLoginBtn.classList.remove('hidden');
+                    userInfoContainer.classList.add('hidden');
+                    userInfoContainer.classList.remove('flex');
+                    mainContent.classList.add('opacity-0');
+
+                    if (unsubscribe) unsubscribe(); // Detach listener if logged out
+                    subscriptions = [];
+                    renderSubscriptions(); // Clear the list
+                }
+            });
+        }
+
+        async function signInWithGoogle() {
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+                // onAuthStateChanged will handle the rest
+            } catch (error) {
+                console.error("Google Sign-in Error:", error);
+                authStatusEl.textContent = "Error signing in. Please try again.";
+            }
+        }
+
+        async function signOutUser() {
+            try {
+                await signOut(auth);
+                // onAuthStateChanged will handle the UI changes
+            } catch (error) {
+                console.error("Sign Out Error:", error);
+            }
+        }
+        
+        async function attachFirestoreListener() {
+            if (!userId) return;
+            
+            const collectionPath = `/artifacts/${appId}/users/${userId}/subscriptions`;
+            const subscriptionsCollection = collection(db, collectionPath);
+            
+            if (unsubscribe) unsubscribe(); // Detach any existing listener first
+            
+            unsubscribe = onSnapshot(subscriptionsCollection, (snapshot) => {
+                subscriptions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderSubscriptions();
+            }, (error) => {
+                console.error("Firestore Snapshot Error: ", error);
+            });
+        }
+        
+        function renderSubscriptions() {
+            subscriptionList.innerHTML = '';
+            
+            if (!userId) {
+                noSubscriptionsMessage.textContent = 'Please sign in to view and add subscriptions.';
+                noSubscriptionsMessage.style.display = 'block';
+            } else if (subscriptions.length === 0) {
+                 noSubscriptionsMessage.textContent = 'You have no subscriptions yet. Add one above to get started!';
+                noSubscriptionsMessage.style.display = 'block';
+            } else {
+                noSubscriptionsMessage.style.display = 'none';
+                // Sort subscriptions by days left, ascending
+                subscriptions.sort((a, b) => calculateDaysLeft(a.nextBillingDate) - calculateDaysLeft(b.nextBillingDate));
+                subscriptions.forEach(sub => {
+                    const subElement = createSubscriptionElement(sub);
+                    subscriptionList.appendChild(subElement);
+                });
+            }
+            calculateTotals();
+        }
+
+        function createSubscriptionElement(sub) {
+            const div = document.createElement('div');
+            div.className = 'bg-white p-4 rounded-lg shadow-sm flex justify-between items-center';
+            div.dataset.id = sub.id;
+
+            const daysLeft = calculateDaysLeft(sub.nextBillingDate);
+            let daysLeftText, daysLeftColor;
+
+            if (daysLeft < 0) {
+                daysLeftText = 'Billed';
+                daysLeftColor = 'text-gray-500';
+            } else if (daysLeft < 7) {
+                daysLeftText = `${daysLeft} days left`;
+                daysLeftColor = 'text-red-500';
+            } else if (daysLeft < 15) {
+                daysLeftText = `${daysLeft} days left`;
+                daysLeftColor = 'text-yellow-500';
+            }
+            else {
+                daysLeftText = `${daysLeft} days left`;
+                daysLeftColor = 'text-green-500';
+            }
+
+            div.innerHTML = `
+                <div>
+                    <h3 class="font-semibold text-lg">${sub.name}</h3>
+                    <p class="text-gray-600">${formatCurrency(sub.price, sub.currency)} / ${sub.billingCycle}</p>
+                    <p class="text-sm text-gray-500">Next bill: ${sub.nextBillingDate}</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-medium ${daysLeftColor}">${daysLeftText}</p>
+                    <button class="delete-btn text-red-500 hover:text-red-700 font-semibold mt-1 text-sm">Delete</button>
+                </div>
+            `;
+            
+            div.querySelector('.delete-btn').addEventListener('click', () => deleteSubscription(sub.id));
+            
+            return div;
+        }
+
+        async function handleAddSubscription(event) {
+            event.preventDefault();
+            if (!userId) {
+                console.error("User not authenticated, cannot add subscription.");
+                alert("Please sign in to add a subscription."); // You might want a nicer modal here
+                return;
+            }
+
+            const formData = new FormData(subscriptionForm);
+            const newSub = {
+                name: formData.get('name'),
+                price: parseFloat(formData.get('price')),
+                currency: formData.get('currency'),
+                billingCycle: formData.get('billing-cycle'),
+                nextBillingDate: formData.get('next-billing-date'),
+            };
+
+            try {
+                const collectionPath = `/artifacts/${appId}/users/${userId}/subscriptions`;
+                await addDoc(collection(db, collectionPath), newSub);
+                subscriptionForm.reset();
+                setDefaultDate();
+                // Close the form after adding
+                formContainer.classList.add('hidden');
+                toggleIcon.classList.remove('rotate-180');
+            } catch (error) {
+                console.error("Error adding subscription to Firestore: ", error);
+            }
+        }
+
+        async function deleteSubscription(id) {
+             if (!userId) {
+                console.error("User not authenticated, cannot delete subscription.");
+                return;
+            }
+            try {
+                const docPath = `/artifacts/${appId}/users/${userId}/subscriptions/${id}`;
+                await deleteDoc(doc(db, docPath));
+            } catch (error) {
+                console.error("Error deleting subscription: ", error);
+            }
+        }
+
+        function calculateTotals() {
+            let monthlyTotal = 0;
+            let yearlyTotal = 0;
+            
+            // We assume a single currency for the total for simplicity.
+            // A more complex app would handle currency conversion.
+            const displayCurrency = subscriptions.length > 0 ? subscriptions[0].currency : 'EGP';
+
+            subscriptions.forEach(sub => {
+                // This is a simplification; real currency conversion is needed for accuracy
+                if (sub.billingCycle === 'monthly') {
+                    monthlyTotal += sub.price;
+                    yearlyTotal += sub.price * 12;
+                } else if (sub.billingCycle === 'yearly') {
+                    yearlyTotal += sub.price;
+                    monthlyTotal += sub.price / 12;
+                }
+            });
+
+            monthlyTotalEl.textContent = formatCurrency(monthlyTotal, displayCurrency);
+            yearlyTotalEl.textContent = formatCurrency(yearlyTotal, displayCurrency);
+        }
+
+        // --- Utility Functions ---
+        function calculateDaysLeft(dateString) {
+            const today = new Date();
+            const billingDate = new Date(dateString);
+            today.setHours(0, 0, 0, 0);
+            billingDate.setHours(0, 0, 0, 0);
+            const diffTime = billingDate - today;
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function formatCurrency(amount, currency) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency }).format(amount);
+        }
+
+        function setDefaultDate() {
+            const dateInput = document.getElementById('next-billing-date');
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            dateInput.value = `${yyyy}-${mm}-${dd}`;
+        }
+
+
+        // --- Event Listeners ---
+        subscriptionForm.addEventListener('submit', handleAddSubscription);
+        googleLoginBtn.addEventListener('click', signInWithGoogle);
+        signOutBtn.addEventListener('click', signOutUser);
+        
+        addSubscriptionToggle.addEventListener('click', () => {
+            formContainer.classList.toggle('hidden');
+            toggleIcon.classList.toggle('rotate-180');
+        });
+
+        // --- Initial Load ---
+        window.onload = () => {
+            setDefaultDate();
+            initialize();
+        };
+
+    </script>
+
+</body>
+</html>
+
