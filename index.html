@@ -534,7 +534,7 @@
         function setDefaultDate() {
             const dateInput = document.getElementById('next-billing-date');
             if (dateInput) {
-                dateInput.value = new date().toISOString().split('T')[0];
+                dateInput.value = new Date().toISOString().split('T')[0];
             }
         }
         
