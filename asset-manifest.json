@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/LifeOs/static/css/main.2e307824.css",
+    "main.js": "/LifeOs/static/js/main.285b67aa.js",
+    "static/js/453.042f6385.chunk.js": "/LifeOs/static/js/453.042f6385.chunk.js",
+    "index.html": "/LifeOs/index.html",
+    "main.2e307824.css.map": "/LifeOs/static/css/main.2e307824.css.map",
+    "main.285b67aa.js.map": "/LifeOs/static/js/main.285b67aa.js.map",
+    "453.042f6385.chunk.js.map": "/LifeOs/static/js/453.042f6385.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2e307824.css",
+    "static/js/main.285b67aa.js"
+  ]
+}
