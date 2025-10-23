@@ -73,11 +73,11 @@ const DashboardPage = () => {
 
   return (
     <div id="dashboard-page" className="page active">
-      <header className="sticky top-0 z-10 flex items-center justify-between bg-background-light/80 p-4 pb-2 backdrop-blur-sm dark:bg-background-dark/80">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-transparent bg-background-light/80 p-4 pb-2 backdrop-blur-sm dark:border-border-dark dark:bg-background-dark/80">
         <div className="w-12"></div>
-        <h1 className="flex-1 text-center text-lg font-bold text-gray-900 dark:text-white">Subscriptions</h1>
+        <h1 className="flex-1 text-center text-lg font-bold text-gray-900 dark:text-text-light">Subscriptions</h1>
         <div className="flex w-12 items-center justify-end">
-          <button id="add-new-header-btn" className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
+          <button id="add-new-header-btn" className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-gray-900 dark:text-text-light hover:bg-gray-200 dark:hover:bg-hover-dark">
             <span className="material-symbols-outlined text-3xl">add</span>
           </button>
         </div>
@@ -92,20 +92,20 @@ const DashboardPage = () => {
         {user && (
           <div id="dashboard-content">
             <section className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Overview</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-text-light">Overview</h2>
               <div className="mt-4 grid grid-cols-2 gap-4">
-                <div className="rounded-xl bg-primary/10 p-4 dark:bg-primary/20">
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Monthly Total</p>
-                  <p id="monthly-total" className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(monthlyTotal, 'USD')}</p>
+                <div className="rounded-xl bg-card-light p-4 dark:bg-card-dark">
+                  <p className="text-sm font-medium text-gray-600 dark:text-text-dark">Monthly Total</p>
+                  <p id="monthly-total" className="mt-1 text-2xl font-bold text-gray-900 dark:text-text-light">{formatCurrency(monthlyTotal, 'USD')}</p>
                 </div>
-                <div className="rounded-xl bg-primary/10 p-4 dark:bg-primary/20">
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Yearly Total</p>
-                  <p id="yearly-total" className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(yearlyTotal, 'USD')}</p>
+                <div className="rounded-xl bg-card-light p-4 dark:bg-card-dark">
+                  <p className="text-sm font-medium text-gray-600 dark:text-text-dark">Yearly Total</p>
+                  <p id="yearly-total" className="mt-1 text-2xl font-bold text-gray-900 dark:text-text-light">{formatCurrency(yearlyTotal, 'USD')}</p>
                 </div>
               </div>
             </section>
             <section>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Upcoming Bills</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-text-light">Upcoming Bills</h2>
               <div id="upcoming-bills-list" className="mt-4 space-y-3">
                 {loading ? (
                   <p className="text-center text-gray-500 py-4">Loading subscriptions...</p>
@@ -146,12 +146,12 @@ const DashboardPage = () => {
                             <span className={`material-symbols-outlined ${iconTextColor}`}>{details.icon}</span>
                           </div>
                           <div className="flex-grow">
-                            <p className="font-semibold text-gray-800 dark:text-gray-100">{sub.name}</p>
+                            <p className="font-semibold text-gray-800 dark:text-text-light">{sub.name}</p>
                             <p className={`text-sm ${textColor}`}>{dueDateText}</p>
                           </div>
                           <div className="shrink-0 text-right">
-                            <p className="text-base font-bold text-gray-800 dark:text-gray-100">{formatCurrency(sub.price, sub.currency)}</p>
-                            <button onClick={() => handleDelete(sub.id)} className="delete-btn text-xs text-gray-400 hover:text-red-500">Delete</button>
+                            <p className="text-base font-bold text-gray-800 dark:text-text-light">{formatCurrency(sub.price, sub.currency)}</p>
+                            <button onClick={() => handleDelete(sub.id)} className="delete-btn text-xs text-gray-400 hover:text-red-500 dark:hover:text-red-400">Delete</button>
                           </div>
                         </div>
                       )

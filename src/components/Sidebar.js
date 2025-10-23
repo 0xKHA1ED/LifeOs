@@ -3,17 +3,17 @@ import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
   const getLinkClassName = ({ isActive }) =>
-    `flex flex-col items-center gap-1 ${
+    `flex flex-col items-center gap-1 rounded-lg p-2 transition-colors duration-200 ${
       isActive
         ? 'text-primary'
-        : 'text-gray-500 dark:text-gray-400'
+        : 'text-gray-500 hover:text-primary dark:text-text-dark dark:hover:text-primary'
     }`;
 
   const getIconClassName = (isActive) =>
     `material-symbols-outlined ${isActive ? 'filled' : ''}`;
 
   return (
-    <aside className="hidden md:flex md:w-24 flex-col items-center justify-center space-y-8 border-r border-gray-200 dark:border-gray-800 bg-card-light dark:bg-card-dark">
+    <aside className="hidden md:flex md:w-24 flex-col items-center justify-center space-y-8 border-r border-gray-200 bg-card-light dark:border-border-dark dark:bg-card-dark">
       <NavLink to="/" className={getLinkClassName}>
         {({ isActive }) => (
           <>

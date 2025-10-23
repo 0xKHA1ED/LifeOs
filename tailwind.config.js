@@ -12,6 +12,10 @@ module.exports = {
         "background-dark": "#101922",
         "card-light": "#ffffff",
         "card-dark": "#1b2733",
+        "border-dark": "#2a3b4c",
+        "text-light": "#f1f5f9",
+        "text-dark": "#94a3b8",
+        "hover-dark": "#223140",
       },
       fontFamily: {
         display: ["Manrope", "sans-serif"],

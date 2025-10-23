@@ -3,17 +3,17 @@ import { NavLink } from 'react-router-dom';
 
 const BottomNav = () => {
   const getLinkClassName = ({ isActive }) =>
-    `flex flex-col items-center gap-1 ${
+    `flex flex-col items-center gap-1 rounded-lg p-2 transition-colors duration-200 ${
       isActive
         ? 'text-primary'
-        : 'text-gray-500 dark:text-gray-400'
+        : 'text-gray-500 hover:text-primary dark:text-text-dark dark:hover:text-primary'
     }`;
 
   const getIconClassName = (isActive) =>
     `material-symbols-outlined ${isActive ? 'filled' : ''}`;
 
   return (
-    <footer className="sticky bottom-0 z-10 border-t border-gray-200 bg-background-light/90 pb-safe-area-inset-bottom pt-2 backdrop-blur-sm dark:border-gray-800 dark:bg-background-dark/90 md:hidden">
+    <footer className="sticky bottom-0 z-10 border-t border-gray-200 bg-background-light/90 pb-safe-area-inset-bottom pt-2 backdrop-blur-sm dark:border-border-dark dark:bg-background-dark/90 md:hidden">
       <nav className="flex justify-around">
         <NavLink to="/" className={getLinkClassName}>
           {({ isActive }) => (
