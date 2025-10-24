@@ -1,25 +1,32 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-import DashboardPage from './components/DashboardPage';
-import AddNewPage from './components/AddNewPage';
-import SettingsPage from './components/SettingsPage';
-import BottomNav from './components/BottomNav';
+import HomePage from './components/HomePage';
+import SubscriptionTracker from './apps/SubscriptionTracker';
+import TodoList from './apps/TodoList';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
     <Router>
-      <div id="app-container" className="relative mx-auto flex min-h-screen w-full max-w-2xl flex-col md:flex-row">
-        <Sidebar />
-        <div className="flex-grow pb-24 md:pb-0">
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/add-new" element={<AddNewPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-          </Routes>
-        </div>
-        <BottomNav />
-      </div>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/subscription-tracker/*"
+          element={
+            <PrivateRoute>
+              <SubscriptionTracker />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/todo-list/*"
+          element={
+            <PrivateRoute>
+              <TodoList />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
     </Router>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { db } from '../firebase';
 import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
@@ -32,11 +33,22 @@ const DashboardPage = () => {
     }
   };
 
-  const calculateDaysLeft = (dateString) => {
+  const calculateDaysLeft = (dateString, billingCycle) => {
     const today = new Date();
-    const billingDate = new Date(dateString);
+    let billingDate = new Date(dateString);
     today.setHours(0, 0, 0, 0);
     billingDate.setHours(0, 0, 0, 0);
+
+    while (billingDate < today) {
+      if (billingCycle === 'monthly') {
+        billingDate.setMonth(billingDate.getMonth() + 1);
+      } else if (billingCycle === 'yearly') {
+        billingDate.setFullYear(billingDate.getFullYear() + 1);
+      } else {
+        // Default to monthly if cycle is not set or invalid
+        billingDate.setMonth(billingDate.getMonth() + 1);
+      }
+    }
     return Math.ceil((billingDate - today) / (1000 * 60 * 60 * 24));
   };
 
@@ -72,50 +84,43 @@ const DashboardPage = () => {
   }, 0);
 
   return (
-    <div id="dashboard-page" className="page active">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-transparent bg-background-light/80 p-4 pb-2 backdrop-blur-sm dark:border-border-dark dark:bg-background-dark/80">
-        <div className="w-12"></div>
-        <h1 className="flex-1 text-center text-lg font-bold text-gray-900 dark:text-text-light">Subscriptions</h1>
-        <div className="flex w-12 items-center justify-end">
-          <button id="add-new-header-btn" className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-gray-900 dark:text-text-light hover:bg-gray-200 dark:hover:bg-hover-dark">
-            <span className="material-symbols-outlined text-3xl">add</span>
-          </button>
-        </div>
-      </header>
-      <main className="p-4">
+    <main className="flex-1 p-8 overflow-y-auto">
+      <div className="max-w-5xl mx-auto">
+        <header className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Subscriptions</h1>
+        </header>
         {!user && (
           <div id="auth-prompt" className="text-center p-6 bg-primary/10 dark:bg-primary/20 rounded-xl mb-6">
             <p>Welcome! Please sign in to manage your subscriptions.</p>
           </div>
         )}
-
         {user && (
-          <div id="dashboard-content">
-            <section className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-text-light">Overview</h2>
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div className="rounded-xl bg-card-light p-4 dark:bg-card-dark">
-                  <p className="text-sm font-medium text-gray-600 dark:text-text-dark">Monthly Total</p>
-                  <p id="monthly-total" className="mt-1 text-2xl font-bold text-gray-900 dark:text-text-light">{formatCurrency(monthlyTotal, 'USD')}</p>
+          <div className="space-y-8">
+            <section>
+              <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">Overview</h2>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-glass-light dark:bg-glass-dark backdrop-blur-sm p-4 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Monthly Total</p>
+                  <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(monthlyTotal, 'USD')}</p>
                 </div>
-                <div className="rounded-xl bg-card-light p-4 dark:bg-card-dark">
-                  <p className="text-sm font-medium text-gray-600 dark:text-text-dark">Yearly Total</p>
-                  <p id="yearly-total" className="mt-1 text-2xl font-bold text-gray-900 dark:text-text-light">{formatCurrency(yearlyTotal, 'USD')}</p>
+                <div className="bg-glass-light dark:bg-glass-dark backdrop-blur-sm p-4 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Yearly Total</p>
+                  <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(yearlyTotal, 'USD')}</p>
                 </div>
               </div>
             </section>
             <section>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-text-light">Upcoming Bills</h2>
-              <div id="upcoming-bills-list" className="mt-4 space-y-3">
+              <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">Upcoming Bills</h2>
+              <div className="space-y-3">
                 {loading ? (
-                  <p className="text-center text-gray-500 py-4">Loading subscriptions...</p>
+                  <p className="text-center text-slate-500 py-4">Loading subscriptions...</p>
                 ) : subscriptions.length === 0 ? (
-                  <p id="no-subscriptions" className="text-center text-gray-500 py-4">You have no subscriptions yet.</p>
+                  <p className="text-center text-slate-500 py-4">You have no subscriptions yet.</p>
                 ) : (
                   subscriptions
-                    .sort((a, b) => calculateDaysLeft(a.nextBillingDate) - calculateDaysLeft(b.nextBillingDate))
+                    .sort((a, b) => calculateDaysLeft(a.nextBillingDate, a.billingCycle) - calculateDaysLeft(b.nextBillingDate, b.billingCycle))
                     .map(sub => {
-                      const daysLeft = calculateDaysLeft(sub.nextBillingDate);
+                      const daysLeft = calculateDaysLeft(sub.nextBillingDate, sub.billingCycle);
                       const details = categoryDetails[sub.category] || categoryDetails.other;
                       let ringColor, textColor, dueDateText;
                       if (daysLeft < 0) {
@@ -141,19 +146,19 @@ const DashboardPage = () => {
                       const iconTextColor = `text-${details.color}-500`;
 
                       return (
-                        <div key={sub.id} className={`flex items-center gap-4 rounded-xl p-3 ring-2 ${ringColor} bg-card-light dark:bg-card-dark`}>
+                        <Link to={`/subscription-tracker/edit/${sub.id}`} key={sub.id} className={`flex items-center gap-4 rounded-xl p-3 ring-2 ${ringColor} bg-glass-light dark:bg-glass-dark backdrop-blur-sm`}>
                           <div className={`flex size-12 shrink-0 items-center justify-center rounded-lg ${iconBgColor}`}>
                             <span className={`material-symbols-outlined ${iconTextColor}`}>{details.icon}</span>
                           </div>
                           <div className="flex-grow">
-                            <p className="font-semibold text-gray-800 dark:text-text-light">{sub.name}</p>
+                            <p className="font-semibold text-slate-800 dark:text-slate-200">{sub.name}</p>
                             <p className={`text-sm ${textColor}`}>{dueDateText}</p>
                           </div>
                           <div className="shrink-0 text-right">
-                            <p className="text-base font-bold text-gray-800 dark:text-text-light">{formatCurrency(sub.price, sub.currency)}</p>
-                            <button onClick={() => handleDelete(sub.id)} className="delete-btn text-xs text-gray-400 hover:text-red-500 dark:hover:text-red-400">Delete</button>
+                            <p className="text-base font-bold text-slate-800 dark:text-slate-200">{formatCurrency(sub.price, sub.currency)}</p>
+                            <button onClick={(e) => { e.preventDefault(); handleDelete(sub.id); }} className="delete-btn text-xs text-slate-400 hover:text-red-500 dark:hover:text-red-400">Delete</button>
                           </div>
-                        </div>
+                        </Link>
                       )
                     })
                 )}
@@ -161,8 +166,8 @@ const DashboardPage = () => {
             </section>
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </main>
   );
 };
 

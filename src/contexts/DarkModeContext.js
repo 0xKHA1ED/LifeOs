@@ -16,9 +16,13 @@ export const DarkModeProvider = ({ children }) => {
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
+      document.body.classList.add('dark:bg-background-dark');
+      document.body.classList.remove('bg-background-light');
       localStorage.theme = 'dark';
     } else {
       document.documentElement.classList.remove('dark');
+      document.body.classList.add('bg-background-light');
+      document.body.classList.remove('dark:bg-background-dark');
       localStorage.theme = 'light';
     }
   }, [darkMode]);
