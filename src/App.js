@@ -7,7 +7,7 @@ import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/LifeOs">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route
