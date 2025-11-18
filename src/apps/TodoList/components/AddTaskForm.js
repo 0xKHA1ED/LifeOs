@@ -47,6 +47,9 @@ const AddTaskForm = ({ onAddTask }) => {
             <option value={4}>P4</option>
           </select>
           <input type="text" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="Tags" className="p-1.5 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors" />
+          <button type="submit" className="p-1.5 rounded-md bg-primary hover:bg-primary-600 text-white transition-colors">
+            <span className="material-symbols-outlined text-lg">send</span>
+          </button>
         </div>
       </form>
     </div>
