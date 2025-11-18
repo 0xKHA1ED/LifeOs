@@ -84,7 +84,7 @@ const DashboardPage = () => {
   }, 0);
 
   return (
-    <main className="flex-1 p-8 overflow-y-auto">
+    <main className="flex-1 p-4 md:p-8 overflow-y-auto">
       <div className="max-w-5xl mx-auto">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Subscriptions</h1>
@@ -98,7 +98,7 @@ const DashboardPage = () => {
           <div className="space-y-8">
             <section>
               <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">Overview</h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-glass-light dark:bg-glass-dark backdrop-blur-sm p-4 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
                   <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Monthly Total</p>
                   <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(monthlyTotal, 'USD')}</p>
@@ -124,21 +124,21 @@ const DashboardPage = () => {
                       const details = categoryDetails[sub.category] || categoryDetails.other;
                       let ringColor, textColor, dueDateText;
                       if (daysLeft < 0) {
-                          ringColor = 'ring-gray-500/50';
-                          textColor = 'text-gray-500';
-                          dueDateText = `Billed ${Math.abs(daysLeft)} days ago`;
+                        ringColor = 'ring-gray-500/50';
+                        textColor = 'text-gray-500';
+                        dueDateText = `Billed ${Math.abs(daysLeft)} days ago`;
                       } else if (daysLeft < 7) {
-                          ringColor = 'ring-red-500/50';
-                          textColor = 'text-red-500';
-                          dueDateText = `Due in ${daysLeft} days`;
+                        ringColor = 'ring-red-500/50';
+                        textColor = 'text-red-500';
+                        dueDateText = `Due in ${daysLeft} days`;
                       } else if (daysLeft < 15) {
-                          ringColor = 'ring-yellow-500/50';
-                          textColor = 'text-yellow-500';
-                          dueDateText = `Due in ${daysLeft} days`;
+                        ringColor = 'ring-yellow-500/50';
+                        textColor = 'text-yellow-500';
+                        dueDateText = `Due in ${daysLeft} days`;
                       } else {
-                          ringColor = 'ring-green-500/50';
-                          textColor = 'text-green-500';
-                          dueDateText = `Due in ${daysLeft} days`;
+                        ringColor = 'ring-green-500/50';
+                        textColor = 'text-green-500';
+                        dueDateText = `Due in ${daysLeft} days`;
                       }
                       if (daysLeft === 0) dueDateText = 'Due today';
                       if (daysLeft === 1) dueDateText = 'Due tomorrow';
@@ -146,7 +146,7 @@ const DashboardPage = () => {
                       const iconTextColor = `text-${details.color}-500`;
 
                       return (
-                        <Link to={`/subscription-tracker/edit/${sub.id}`} key={sub.id} className={`flex items-center gap-4 rounded-xl p-3 ring-2 ${ringColor} bg-glass-light dark:bg-glass-dark backdrop-blur-sm`}>
+                        <Link to={`/subscription-tracker/edit/${sub.id}`} key={sub.id} className={`flex items-center gap-4 rounded-xl p-3 ring-2 ${ringColor} bg-glass-light dark:bg-glass-dark backdrop-blur-sm transition-all duration-200 hover:scale-[1.01] hover:shadow-md`}>
                           <div className={`flex size-12 shrink-0 items-center justify-center rounded-lg ${iconBgColor}`}>
                             <span className={`material-symbols-outlined ${iconTextColor}`}>{details.icon}</span>
                           </div>

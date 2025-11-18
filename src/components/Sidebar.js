@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
   return (
-    <aside className="hidden md:flex md:w-72 flex-shrink-0 bg-glass-light dark:bg-glass-dark backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/50 p-6 flex-col justify-between transition-colors duration-300">
+    <aside className="hidden md:flex md:w-72 flex-shrink-0 bg-glass-light dark:bg-glass-dark backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/50 p-6 flex-col justify-between transition-colors duration-300 sticky top-0 h-screen overflow-y-auto">
       <div className="flex items-center gap-3 mb-8">
         <span className="material-symbols-outlined text-primary text-3xl">subscriptions</span>
         <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Subscriptions</h2>
@@ -39,10 +39,9 @@ const Sidebar = () => {
 };
 
 const getLinkClassName = ({ isActive }) =>
-  `flex items-center gap-4 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 ${
-    isActive
-      ? 'bg-primary/10 text-primary'
-      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
+  `flex items-center gap-4 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 ${isActive
+    ? 'bg-primary/10 text-primary'
+    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
   }`;
 
 export default Sidebar;
