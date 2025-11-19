@@ -28,7 +28,7 @@ const TaskList = ({ tasks, onUpdateTask, onDeleteTask, onAddSubtask, onDragEnd }
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className="bg-glass-light dark:bg-glass-dark backdrop-blur-sm p-4 rounded-xl border border-slate-200/50 dark:border-slate-800/50"
+                    className="bg-white dark:bg-slate-800 p-4 border-2 border-black shadow-neo transition-all duration-200 hover:-translate-y-1 hover:shadow-neo-lg"
                   >
                     <TaskItem
                       task={task}

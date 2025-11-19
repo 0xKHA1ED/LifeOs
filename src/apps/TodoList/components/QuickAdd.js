@@ -28,13 +28,13 @@ const QuickAdd = ({ onAddTask }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4">
+    <form onSubmit={handleSubmit} className="mb-6">
       <input
         type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Quick Add: Review PR tomorrow at 4pm p1 #work"
-        className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+        className="w-full p-4 text-sm font-bold bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-black focus:shadow-neo transition-all duration-200 placeholder:text-slate-400"
       />
     </form>
   );

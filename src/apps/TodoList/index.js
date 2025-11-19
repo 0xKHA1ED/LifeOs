@@ -111,7 +111,7 @@ const TodoList = () => {
     const newTasks = Array.from(tasks);
     const draggedTask = newTasks.find(task => task.id === draggableId);
     draggedTask.parent_task_id = destination.droppableId === 'root' ? null : destination.droppableId;
-    
+
     // This is a simplified reordering logic. A more robust solution would involve updating the order in the database.
     setTasks(newTasks);
   };
@@ -137,39 +137,80 @@ const TodoList = () => {
       return new Date(b.created_at) - new Date(a.created_at);
     });
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <div className="flex h-screen overflow-hidden">
-      <aside className="w-72 flex-shrink-0 bg-glass-light dark:bg-glass-dark backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-800/50 p-6 flex flex-col justify-between transition-colors duration-300">
+    <div className="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark relative">
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-20 md:hidden backdrop-blur-sm"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`
+        fixed md:static inset-y-0 left-0 z-30 w-72 flex-shrink-0
+        bg-white dark:bg-slate-900 border-r-2 border-black
+        p-6 flex flex-col justify-between transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
         <div>
-          <div className="flex items-center gap-3 mb-8">
-            <span className="material-symbols-outlined text-primary text-3xl">task_alt</span>
-            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">TaskFlow AI</h2>
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary border-2 border-black shadow-neo flex items-center justify-center">
+                <span className="material-symbols-outlined text-white text-2xl">task_alt</span>
+              </div>
+              <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">TASKFLOW</h2>
+            </div>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="md:hidden p-1 hover:bg-slate-100 rounded-full"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
           </div>
-          <ProjectList projects={projects} selectedProject={selectedProject} onSelectProject={setSelectedProject} />
+          <ProjectList
+            projects={projects}
+            selectedProject={selectedProject}
+            onSelectProject={(id) => {
+              setSelectedProject(id);
+              setIsSidebarOpen(false);
+            }}
+          />
         </div>
         <div className="mt-8">
           <AddProjectForm onAddProject={handleAddProject} />
         </div>
       </aside>
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto w-full">
         <div className="max-w-5xl mx-auto">
           <Routes>
             <Route path="/" element={
               <>
-                <header className="flex justify-between items-center mb-8">
-                  <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Inbox</h1>
-                  <div className="flex items-center gap-2">
+                <header className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => setIsSidebarOpen(true)}
+                      className="md:hidden p-2 bg-white border-2 border-black shadow-neo active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
+                    >
+                      <span className="material-symbols-outlined">menu</span>
+                    </button>
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Inbox</h1>
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
                     <input
                       type="text"
-                      placeholder="Filter tasks"
+                      placeholder="Filter tasks..."
                       value={filter}
                       onChange={(e) => setFilter(e.target.value)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 bg-white/50 dark:bg-slate-800/50 border border-slate-300/70 dark:border-slate-700/70 rounded-lg hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-all duration-200"
+                      className="flex-1 px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border-2 border-black rounded-none focus:shadow-neo transition-all duration-200 placeholder:text-slate-400"
                     />
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 bg-white/50 dark:bg-slate-800/50 border border-slate-300/70 dark:border-slate-700/70 rounded-lg hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-all duration-200"
+                      className="flex-1 px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border-2 border-black rounded-none focus:shadow-neo transition-all duration-200 cursor-pointer"
                     >
                       <option value="created_at">Sort by Date</option>
                       <option value="due_date">Sort by Due Date</option>
