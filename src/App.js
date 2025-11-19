@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import SubscriptionTracker from './apps/SubscriptionTracker';
 import TodoList from './apps/TodoList';
+import NotesApp from './apps/NotesApp';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -23,6 +24,14 @@ function App() {
           element={
             <PrivateRoute>
               <TodoList />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/notes-app/*"
+          element={
+            <PrivateRoute>
+              <NotesApp />
             </PrivateRoute>
           }
         />
